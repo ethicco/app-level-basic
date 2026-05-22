@@ -53,15 +53,15 @@ func main() {
 	amount := readAmount()
 	to := readCurrency("Целевая валюта")
 
-	result := convert(amount, from, to)
+	result := convert(amount, from, to, &rates)
 
 	fmt.Printf("\n%.2f %s = %.2f %s\n", amount, from, result, to)
 }
 
-func convert(amount float64, from, to string) float64 {
+func convert(amount float64, from, to string, r *map[string]map[string]float64) float64 {
 	switch from {
 	case "USD", "EUR", "RUB", "GBP", "CNY":
-		if rate, ok := rates[from][to]; ok {
+		if rate, ok := (*r)[from][to]; ok {
 			return amount * rate
 		}
 	}
