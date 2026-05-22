@@ -5,8 +5,6 @@ import (
 	"strings"
 )
 
-var supportedCurrencies = []string{"USD", "EUR", "RUB", "GBP", "CNY"}
-
 var rates = map[string]map[string]float64{
 	"USD": {"EUR": 0.92, "RUB": 90.5, "GBP": 0.79, "CNY": 7.24, "USD": 1},
 	"EUR": {"USD": 1.09, "RUB": 98.3, "GBP": 0.86, "CNY": 7.87, "EUR": 1},
@@ -14,6 +12,8 @@ var rates = map[string]map[string]float64{
 	"GBP": {"USD": 1.27, "EUR": 1.16, "RUB": 115.0, "CNY": 9.16, "GBP": 1},
 	"CNY": {"USD": 0.138, "EUR": 0.127, "RUB": 12.5, "GBP": 0.109, "CNY": 1},
 }
+
+var supportedCurrencies = []string{"USD", "EUR", "RUB", "GBP", "CNY"}
 
 func readCurrency(prompt string) string {
 	hints := strings.Join(supportedCurrencies, ", ")
@@ -45,16 +45,6 @@ func readAmount() float64 {
 	}
 }
 
-func convert(amount float64, from, to string) float64 {
-	switch from {
-	case "USD", "EUR", "RUB", "GBP", "CNY":
-		if rate, ok := rates[from][to]; ok {
-			return amount * rate
-		}
-	}
-	return 0
-}
-
 func main() {
 	fmt.Println("=== Конвертер валют ===")
 	fmt.Println()
@@ -63,7 +53,17 @@ func main() {
 	amount := readAmount()
 	to := readCurrency("Целевая валюта")
 
-	result := convert(amount, from, to)
+	result := convert(amount, from, to, &rates)
 
 	fmt.Printf("\n%.2f %s = %.2f %s\n", amount, from, result, to)
+}
+
+func convert(amount float64, from, to string, r *map[string]map[string]float64) float64 {
+	switch from {
+	case "USD", "EUR", "RUB", "GBP", "CNY":
+		if rate, ok := (*r)[from][to]; ok {
+			return amount * rate
+		}
+	}
+	return 0
 }
