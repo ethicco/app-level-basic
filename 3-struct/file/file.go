@@ -5,16 +5,20 @@ import (
 	"strings"
 )
 
-func ReadFile(name string) ([]byte, error) {
-	data, err := os.ReadFile(name)
+type File struct{}
 
+func NewFile() *File {
+	return &File{}
+}
+
+func (f *File) ReadFile(name string) ([]byte, error) {
+	data, err := os.ReadFile(name)
 	if err != nil {
 		return nil, err
 	}
-
 	return data, nil
 }
 
-func CheckJsonExtension(name string) bool {
+func (f *File) CheckJsonExtension(name string) bool {
 	return strings.HasSuffix(name, ".json")
 }
