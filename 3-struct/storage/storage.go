@@ -19,7 +19,7 @@ func NewStorage(reader FileReader) *Storage {
 	return &Storage{reader: reader}
 }
 
-func (s *Storage) SaveBin(path string, bin bins.Bin) error {
+func (s *Storage) SaveBin(path string, key string, bin bins.Bin) error {
 	data, err := json.Marshal(bin)
 	if err != nil {
 		return err
@@ -36,7 +36,7 @@ func (s *Storage) SaveBin(path string, bin bins.Bin) error {
 	return err
 }
 
-func (s *Storage) LoadBinList(path string) ([]bins.BinList, error) {
+func (s *Storage) LoadBinList(path string, key string) ([]bins.BinList, error) {
 	data, err := s.reader.ReadFile(path)
 	if err != nil {
 		return nil, err

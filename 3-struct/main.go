@@ -8,14 +8,20 @@ import (
 
 	"app-struct/api"
 	"app-struct/bins"
+	"app-struct/config"
 	"app-struct/file"
 	"app-struct/storage"
 )
 
 func main() {
+	cfg, err := config.New(".env")
+	if err != nil {
+		panic("Не найден .env файл")
+	}
+
 	fileService := file.NewFile()
 	store := storage.NewStorage(fileService)
-	app := api.NewApp(store, fileService)
+	app := api.NewApp(store, fileService, cfg)
 
 	if err := app.CreateBin("bin-1", false, "My First Bin", "bin-1.json"); err != nil {
 		log.Fatal(err)
