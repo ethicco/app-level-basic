@@ -7,37 +7,43 @@ import (
 	"app-struct/bins"
 )
 
-func SaveBin(path string, bin bins.Bin) error {
+type FileReader interface {
+	ReadFile(name string) ([]byte, error)
+}
+
+type Storage struct {
+	reader FileReader
+}
+
+func NewStorage(reader FileReader) *Storage {
+	return &Storage{reader: reader}
+}
+
+func (s *Storage) SaveBin(path string, bin bins.Bin) error {
 	data, err := json.Marshal(bin)
-
 	if err != nil {
 		return err
 	}
 
-	file, err := os.Create(path)
-
+	f, err := os.Create(path)
 	if err != nil {
 		return err
 	}
 
-	_, err = file.Write(data)
-	file.Close()
+	_, err = f.Write(data)
+	f.Close()
 
 	return err
 }
 
-func LoadBinList(path string) ([]bins.BinList, error) {
-	data, err := os.ReadFile(path)
-
+func (s *Storage) LoadBinList(path string) ([]bins.BinList, error) {
+	data, err := s.reader.ReadFile(path)
 	if err != nil {
 		return nil, err
 	}
 
 	var list []bins.BinList
-
-	err = json.Unmarshal(data, &list)
-
-	if err != nil {
+	if err = json.Unmarshal(data, &list); err != nil {
 		return nil, err
 	}
 
