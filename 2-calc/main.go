@@ -71,13 +71,19 @@ func main() {
 		return
 	}
 
+	var menu = map[string]func(nums []float64) float64{
+		"SUM": sum,
+		"AVG": avg,
+		"MED": median,
+	}
+
 	switch operation {
 	case "SUM":
-		fmt.Printf("Сумма: %g\n", sum(nums))
+		fmt.Printf("Сумма: %g\n", menu[operation](nums))
 	case "AVG":
-		fmt.Printf("Среднее: %g\n", avg(nums))
+		fmt.Printf("Среднее: %g\n", menu[operation](nums))
 	case "MED":
-		fmt.Printf("Медиана: %g\n", median(nums))
+		fmt.Printf("Медиана: %g\n", menu[operation](nums))
 	default:
 		fmt.Printf("Неизвестная операция: %s\n", operation)
 	}
