@@ -10,6 +10,7 @@ import (
 type Config struct {
 	Env         string
 	StoragePath string
+	Key         string
 }
 
 func New(envFile string) (*Config, error) {
@@ -20,6 +21,7 @@ func New(envFile string) (*Config, error) {
 	return &Config{
 		Env:         getEnv("APP_ENV", "development"),
 		StoragePath: getEnv("STORAGE_PATH", "."),
+		Key:         getEnv("KEY", ""),
 	}, nil
 }
 

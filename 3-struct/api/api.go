@@ -9,8 +9,8 @@ import (
 )
 
 type Storage interface {
-	SaveBin(path string, bin bins.Bin) error
-	LoadBinList(path string) ([]bins.BinList, error)
+	SaveBin(path string, key string, bin bins.Bin) error
+	LoadBinList(path string, key string) ([]bins.BinList, error)
 }
 
 type FileValidator interface {
@@ -32,12 +32,12 @@ func (a *App) CreateBin(id string, private bool, name string, path string) error
 		return fmt.Errorf("file must have .json extension: %s", path)
 	}
 	bin := bins.NewBin(id, private, name)
-	return a.storage.SaveBin(filepath.Join(a.config.StoragePath, path), bin)
+	return a.storage.SaveBin(filepath.Join(a.config.StoragePath, path), a.config.Key, bin)
 }
 
 func (a *App) ListBins(path string) ([]bins.BinList, error) {
 	if !a.validator.CheckJsonExtension(path) {
 		return nil, fmt.Errorf("file must have .json extension: %s", path)
 	}
-	return a.storage.LoadBinList(filepath.Join(a.config.StoragePath, path))
+	return a.storage.LoadBinList(filepath.Join(a.config.StoragePath, path), a.config.Key)
 }
